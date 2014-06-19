@@ -1,6 +1,6 @@
 {
   "name": "decorquest",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "./decorquest.js",
   "description": "Decorators for Node's core request modules",
   "homepage": "https://github.com/tounano/decorquest/",
