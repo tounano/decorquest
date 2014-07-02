@@ -9,7 +9,8 @@ module.exports = {
   attachAuthorizationHeader: attachAuthorizationHeader,
   cookiequest: cookiequest,
   proxyquest: proxyquest,
-  tunnelquest: tunnelquest
+  tunnelquest: tunnelquest,
+  timeoutquest: timeoutquest
 }
 
 function request(opts, cb) {
@@ -130,5 +131,21 @@ function tunnelquest(request) {
   function capitaliseFirstLetter(string)
   {
     return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+}
+
+function timeoutquest(request) {
+  return function (opts, cb) {
+    if (!opts.responseTimeout) return request(opts, cb);
+
+    var req = request(opts, cb);
+    req.setTimeout(opts.responseTimeout, function () {
+      var err = new Error('ETIMEDOUT: ' + opts.responseTimeout + ' ms');
+      err.code = 'ETIMEDOUT';
+      req.emit('error', err);
+      req.abort();
+    });
+
+    return req;
   }
 }
