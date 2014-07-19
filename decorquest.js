@@ -71,10 +71,15 @@ function cookiequest(request) {
           var cookies = res.headers["set-cookie"];
           var hostUri = url.parse("http://" + res.req._headers.host);
           for (var i = 0; i < cookies.length; ++i) {
-            var cookie = cookiejar.Cookie(cookies[i]);
-            cookie.domain = cookie.domain ? cookie.domain : hostUri.hostname;
+            // In case the cookie has a wrong pattern
+            try {
+              var cookie = cookiejar.Cookie(cookies[i]);
+              cookie.domain = cookie.domain ? cookie.domain : hostUri.hostname;
 
-            jar.setCookie(cookie);
+              jar.setCookie(cookie);
+            } catch (e) {
+              // do nothing
+            }
           }
         }
 
